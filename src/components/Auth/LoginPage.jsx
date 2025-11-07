@@ -33,7 +33,7 @@ const LoginPage = () => {
     // Apply fix
     document.body.style.margin = '0';
     document.body.style.padding = '0';
-    document.body.style.background = 'linear-gradient(to bottom right, #1e293b, #073733ff, #1e293b)';
+    document.body.style.background = 'linear-gradient(to bottom right, #1e293b, #0f766e, #1e293b)';
     document.body.style.backgroundAttachment = 'fixed';
     document.body.style.minHeight = '100vh';
     

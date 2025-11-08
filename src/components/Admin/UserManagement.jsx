@@ -64,6 +64,11 @@ function UserManagement() {
   const [users, setUsers] = useState(initialUsers);
   const [selectedUser, setSelectedUser] = useState(null);
   const [flash, setFlash] = useState(null);
+  const [newUser, setNewUser] = useState({
+    name: '',
+    email: '',
+    type: 'User'
+  });
   const [systemLog, setSystemLog] = useState([
     {
       id: 'log-0',
@@ -150,16 +155,28 @@ function UserManagement() {
     );
     if (!confirmed) return;
 
-    const notify = window.confirm('Send a reset link to the user?');
-
-    pushLog(
-      'Password Reset',
-      user,
-      notify ? 'Reset link emailed to user' : 'Manual reset recorded by admin'
+    const sendLink = window.confirm(
+      'Select OK to send a reset link to the user.\nSelect Cancel to set a temporary password yourself.'
     );
+
+    if (sendLink) {
+      pushLog('Password Reset', user, 'Reset link emailed to user');
+      showFlash('success', `Reset link sent to ${user.email}.`);
+      return;
+    }
+
+    const tempPassword = window.prompt(
+      'Enter the temporary password you want to assign (leave blank to cancel):'
+    );
+    if (!tempPassword) {
+      showFlash('error', 'Manual reset cancelled - no password provided.');
+      return;
+    }
+
+    pushLog('Password Reset', user, `Manual password set by admin (${tempPassword.length} chars)`);
     showFlash(
       'success',
-      `Password reset recorded for ${user.name}. ${notify ? 'Reset link sent.' : ''}`
+      `Manual password reset recorded for ${user.name}. Provide the temporary password securely.`
     );
   };
 
@@ -171,6 +188,60 @@ function UserManagement() {
   const handleSearchSubmit = (event) => {
     event.preventDefault();
     pushLog('Search', currentAdmin, `Query submitted: "${searchQuery || 'all'}"`);
+  };
+
+  const handleCreateUser = (event) => {
+    event.preventDefault();
+
+    if (!newUser.name.trim() || !newUser.email.trim()) {
+      showFlash('error', 'Name and email are required to create a user.');
+      return;
+    }
+
+    const exists = users.some(
+      (user) => user.email.toLowerCase() === newUser.email.trim().toLowerCase()
+    );
+    if (exists) {
+      showFlash('error', 'A user with that email already exists.');
+      return;
+    }
+
+    const nextId = `U-${Math.floor(10000 + Math.random() * 89999)}`;
+    const createdUser = {
+      id: nextId,
+      name: newUser.name.trim(),
+      email: newUser.email.trim(),
+      status: 'active',
+      advisor: newUser.type === 'Advisor' ? 'Self' : 'Assigned',
+      lastLogin: 'Never',
+      segment: 'Manual',
+      location: 'N/A',
+      phone: 'N/A',
+      type: newUser.type
+    };
+
+    setUsers((prev) => [createdUser, ...prev]);
+    setNewUser({ name: '', email: '', type: 'User' });
+    pushLog('Create User', createdUser, `Profile created as ${createdUser.type}`);
+    showFlash('success', `${createdUser.name} has been created.`);
+  };
+
+  const handleDeleteUser = (user) => {
+    if (user.id === currentAdmin.id) {
+      showFlash('error', 'You cannot delete your own admin profile.');
+      pushLog('Security', user, 'Attempted self-deletion was blocked');
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete ${user.name}? This removes their profile and history from this console.`
+    );
+    if (!confirmed) return;
+
+    setUsers((prev) => prev.filter((item) => item.id !== user.id));
+    setSelectedUser((prev) => (prev && prev.id === user.id ? null : prev));
+    pushLog('Delete User', user, 'Profile removed by admin');
+    showFlash('success', `${user.name} has been deleted.`);
   };
 
   return (
@@ -234,6 +305,45 @@ function UserManagement() {
             Showing {filteredUsers.length} result{filteredUsers.length === 1 ? '' : 's'}
           </div>
 
+          <section className="bg-white/5 border border-white/10 rounded-3xl p-6 shadow-[0_10px_40px_rgba(0,0,0,0.45)] space-y-5">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-gray-400">
+                Create
+              </p>
+              <h3 className="text-2xl font-semibold text-white">Add New User</h3>
+            </div>
+            <form className="grid md:grid-cols-3 gap-4" onSubmit={handleCreateUser}>
+              <input
+                type="text"
+                value={newUser.name}
+                onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                placeholder="Full name"
+                className="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-400/70"
+              />
+              <input
+                type="email"
+                value={newUser.email}
+                onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                placeholder="email@example.com"
+                className="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-400/70"
+              />
+              <select
+                value={newUser.type}
+                onChange={(e) => setNewUser({ ...newUser, type: e.target.value })}
+                className="w-full rounded-2xl bg-white/5 border border-white/10 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-teal-400/70 admin-dark-select"
+              >
+                <option value="User">User</option>
+                <option value="Advisor">Advisor</option>
+              </select>
+              <button
+                type="submit"
+                className="md:col-span-3 rounded-2xl bg-white/10 border border-white/20 text-white font-semibold py-3 hover:bg-white/20 transition"
+              >
+                Create User
+              </button>
+            </form>
+          </section>
+
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
             {filteredUsers.map((user) => (
               <UserCard
@@ -242,6 +352,7 @@ function UserManagement() {
                 onOpenProfile={() => handleProfileOpen(user)}
                 onToggleStatus={() => handleStatusToggle(user)}
                 onResetPassword={() => handleResetPassword(user)}
+                onDelete={() => handleDeleteUser(user)}
               />
             ))}
           </div>
@@ -290,13 +401,14 @@ function UserManagement() {
           onClose={() => setSelectedUser(null)}
           onResetPassword={() => handleResetPassword(selectedUser)}
           onToggleStatus={() => handleStatusToggle(selectedUser)}
+          onDelete={() => handleDeleteUser(selectedUser)}
         />
       )}
     </>
   );
 }
 
-function UserCard({ user, onOpenProfile, onToggleStatus, onResetPassword }) {
+function UserCard({ user, onOpenProfile, onToggleStatus, onResetPassword, onDelete }) {
   const isActive = user.status === 'active';
   const initials = user.name
     .split(' ')
@@ -359,12 +471,18 @@ function UserCard({ user, onOpenProfile, onToggleStatus, onResetPassword }) {
         >
           Reset Password
         </button>
+        <button
+          onClick={() => onDelete(user)}
+          className="flex-1 min-w-[140px] rounded-2xl border border-red-400/40 px-4 py-3 text-sm font-semibold text-red-100 hover:bg-red-500/10 transition"
+        >
+          Delete User
+        </button>
       </div>
     </article>
   );
 }
 
-function ProfileDrawer({ user, onClose, onResetPassword, onToggleStatus }) {
+function ProfileDrawer({ user, onClose, onResetPassword, onToggleStatus, onDelete }) {
   const isActive = user.status === 'active';
 
   return (
@@ -446,6 +564,12 @@ function ProfileDrawer({ user, onClose, onResetPassword, onToggleStatus }) {
           >
             {isActive ? 'Deactivate User' : 'Activate User'}
           </button>
+          <button
+            onClick={onDelete}
+            className="rounded-2xl px-4 py-3 text-sm font-semibold border border-red-400/40 text-red-100 hover:bg-red-500/10 transition"
+          >
+            Delete User
+          </button>
         </div>
       </div>
     </div>
@@ -453,3 +577,4 @@ function ProfileDrawer({ user, onClose, onResetPassword, onToggleStatus }) {
 }
 
 export default UserManagement;
+

@@ -107,7 +107,7 @@ const LoginPage = () => {
     if (result.success) {
       switch(userType) {
         case 'advisor':
-          navigate('/advisor-dashboard');
+          navigate('/financial-advisor');
           break;
         case 'admin':
           navigate('/admin');

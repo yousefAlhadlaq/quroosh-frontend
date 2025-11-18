@@ -17,7 +17,7 @@ import FinancialSettingsPage from '../components/Advisor/FinancialSettingsPage';
 import AdvisorAvailabilitySettings from '../components/Advisor/AdvisorAvailabilitySettings';
 
 // Investment Components (Abdulmajeed)
-import DashboardPage from '../components/Investments/InvestmentsPage';
+import InvestmentsPage from '../components/Investments/InvestmentsPage';
 import ZakahCalculator from '../components/Investments/ZakahCalculator';
 import ReportsExport from '../components/Investments/ReportsExport';
 
@@ -66,7 +66,7 @@ const settingsRoutes = [
 const dashboardRoutes = [
   { path: '/home', element: createProtectedElement(DashboardPage, clientRoles) },
   { path: '/dashboard', element: createProtectedElement(DashboardPage, clientRoles) },
-  { path: '/investments', element: createProtectedElement(DashboardPage, clientRoles) },
+  { path: '/investments', element: createProtectedElement(InvestmentsPage, clientRoles) },
   { path: '/zakah-calculator', element: createProtectedElement(ZakahCalculator, clientRoles) },
   { path: '/reports', element: createProtectedElement(ReportsExport, clientRoles) },
 ];

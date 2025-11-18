@@ -117,6 +117,7 @@ const LoginPage = () => {
             navigate('/admin');
             break;
           default:
+            // Client role - redirect to dashboard
             navigate('/dashboard');
         }
       } else {

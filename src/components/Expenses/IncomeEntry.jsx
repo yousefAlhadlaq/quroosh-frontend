@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import InputField from '../Shared/InputField';
 import Button from '../Shared/Button';
 
-function IncomeEntry() {
+function IncomeEntry({ categories = [], onAdd, onDelete, entries = [] }) {
   const [income, setIncome] = useState({
     source: '',
     amount: '',
@@ -11,7 +11,7 @@ function IncomeEntry() {
     description: ''
   });
 
-  const [incomeList, setIncomeList] = useState([
+  const [localList, setLocalList] = useState(entries.length ? entries : [
     { id: 1, source: 'Salary', amount: 5000, date: '2024-01-01', category: 'Employment' },
     { id: 2, source: 'Freelance', amount: 1500, date: '2024-01-15', category: 'Business' }
   ]);
@@ -25,23 +25,30 @@ function IncomeEntry() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add income entry logic here
     const newIncome = {
-      id: incomeList.length + 1,
+      id: Date.now(),
       ...income,
       amount: parseFloat(income.amount)
     };
-    setIncomeList([...incomeList, newIncome]);
+
+    if (onAdd) onAdd(newIncome);
+    else setLocalList(prev => [newIncome, ...prev]);
+
     setIncome({ source: '', amount: '', date: '', category: '', description: '' });
   };
 
-  return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Income Entry</h2>
+  const handleDelete = (id) => {
+    if (onDelete) return onDelete(id);
+    setLocalList(prev => prev.filter(x => x.id !== id));
+  };
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+  return (
+    <div className="w-full h-full">
+      <h2 className="text-2xl font-bold mb-6 text-white">Income Entry</h2>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
         {/* Income Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+  <div className="bg-white p-6 rounded-lg shadow-md min-h-[360px]">
           <h3 className="text-xl font-semibold mb-4">Add Income</h3>
           <form onSubmit={handleSubmit}>
             <InputField
@@ -80,10 +87,9 @@ function IncomeEntry() {
                 required
               >
                 <option value="">Select Category</option>
-                <option value="Employment">Employment</option>
-                <option value="Business">Business</option>
-                <option value="Investment">Investment</option>
-                <option value="Other">Other</option>
+                {(categories.length ? categories : ['Employment','Business','Investment','Other']).map(c => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
               </select>
             </div>
             <div className="mb-4">
@@ -105,10 +111,10 @@ function IncomeEntry() {
         </div>
 
         {/* Income List */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+  <div className="bg-white p-6 rounded-lg shadow-md min-h-[360px]">
           <h3 className="text-xl font-semibold mb-4">Recent Income</h3>
           <div className="space-y-3">
-            {incomeList.map((item) => (
+            {(entries.length ? entries : localList).map((item) => (
               <div key={item.id} className="p-4 border border-gray-200 rounded">
                 <div className="flex justify-between items-start">
                   <div>
@@ -116,9 +122,12 @@ function IncomeEntry() {
                     <p className="text-sm text-gray-600">{item.category}</p>
                     <p className="text-xs text-gray-500">{item.date}</p>
                   </div>
-                  <p className="text-lg font-bold text-green-600">
-                    ${item.amount.toLocaleString()}
-                  </p>
+                  <div className="flex flex-col items-end">
+                    <p className="text-lg font-bold text-green-600">${Number(item.amount).toLocaleString()}</p>
+                    <div className="mt-2">
+                      <Button onClick={() => handleDelete(item.id)} variant="danger">Delete</Button>
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

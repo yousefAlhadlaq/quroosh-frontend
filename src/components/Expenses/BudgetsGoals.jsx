@@ -1,121 +1,117 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import InputField from '../Shared/InputField';
 import Button from '../Shared/Button';
 
-function BudgetsGoals({ budgets = [], onAddBudget, expenses = [] }) {
-  const [budget, setBudget] = useState({
-    category: '',
-    amount: '',
-    period: 'monthly'
-  });
+const currencyFormatter = new Intl.NumberFormat('en-SA', {
+  style: 'currency',
+  currency: 'SAR',
+  maximumFractionDigits: 0
+});
 
-  const handleChange = (e) => {
-    setBudget({
-      ...budget,
-      [e.target.name]: e.target.value
-    });
-  };
+function BudgetsGoals({ categories = [], budgets = [], onAddBudget, onRemoveBudget }) {
+  const [form, setForm] = useState({ categoryId: '', limit: '', period: 'monthly' });
+  const [feedback, setFeedback] = useState(null);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const newBudget = {
-      id: Date.now(),
-      ...budget,
-      amount: parseFloat(budget.amount),
-      spent: 0
-    };
-    if (onAddBudget) onAddBudget(newBudget);
-    setBudget({ category: '', amount: '', period: 'monthly' });
-  };
+  useEffect(() => {
+    if (!categories.length) return;
+    setForm((prev) => ({
+      ...prev,
+      categoryId: categories.find((category) => category.id === prev.categoryId)?.id || categories[0].id
+    }));
+  }, [categories]);
 
-  const getProgressPercentage = (spent, amount) => {
-    if (!amount || amount === 0) return 0;
-    return Math.min((spent / amount) * 100, 100);
-  };
-
-  const getProgressColor = (percentage) => {
-    if (percentage < 70) return 'bg-green-500';
-    if (percentage < 90) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
-
-  const computeSpentForCategory = (category) => {
-    return expenses.filter(e => e.category === category).reduce((s, x) => s + Number(x.amount || 0), 0);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const result = onAddBudget?.(form);
+    setFeedback(result);
+    if (result?.ok) {
+      setForm((prev) => ({ ...prev, limit: '', period: 'monthly' }));
+    }
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Budgets & Goals</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Add Budget Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold mb-4">Set Budget</h3>
-          <form onSubmit={handleSubmit}>
-            <InputField
-              label="Category"
-              type="text"
-              name="category"
-              value={budget.category}
-              onChange={handleChange}
-              required
-            />
-            <InputField
-              label="Budget Amount"
-              type="number"
-              name="amount"
-              value={budget.amount}
-              onChange={handleChange}
-              required
-            />
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Period
-              </label>
-              <select
-                name="period"
-                value={budget.period}
-                onChange={handleChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
-              >
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
-            <Button type="submit" variant="primary">
-              Set Budget
-            </Button>
-          </form>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <p className="text-sm text-slate-400">Budgets</p>
+          <h3 className="text-xl font-semibold">Per-category limits</h3>
         </div>
+        <span className="text-xs text-slate-500">{budgets.length} active</span>
+      </div>
 
-        {/* Budget Progress */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
-          <h3 className="text-xl font-semibold mb-4">Budget Progress</h3>
-          <div className="space-y-4">
-            {(budgets || []).map((item) => {
-              const spent = computeSpentForCategory(item.category);
-              const percentage = getProgressPercentage(spent, item.amount);
-              return (
-                <div key={item.id} className="p-4 border border-gray-200 rounded">
-                  <div className="flex justify-between mb-2">
-                    <h4 className="font-semibold">{item.category}</h4>
-                    <span className="text-sm text-gray-600">
-                      ${spent} / ${item.amount}
-                    </span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-4">
-                    <div
-                      className={`h-4 rounded-full ${getProgressColor(percentage)}`}
-                      style={{ width: `${percentage}%` }}
-                    ></div>
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">{percentage.toFixed(1)}% used</p>
-                </div>
-              );
-            })}
+      <form className="space-y-3" onSubmit={handleSubmit}>
+        <div className="grid gap-3 md:grid-cols-3">
+          <div>
+            <label className="text-xs text-slate-400 mb-1 block">Category</label>
+            <select
+              value={form.categoryId}
+              onChange={(event) => setForm({ ...form, categoryId: event.target.value })}
+              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white"
+            >
+              {categories.map((category) => (
+                <option key={category.id} value={category.id}>
+                  {category.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <InputField
+            label="Limit"
+            type="number"
+            name="limit"
+            value={form.limit}
+            onChange={(event) => setForm({ ...form, limit: event.target.value })}
+            min="0"
+            step="0.01"
+            required
+          />
+          <div>
+            <label className="text-xs text-slate-400 mb-1 block">Period</label>
+            <select
+              value={form.period}
+              onChange={(event) => setForm({ ...form, period: event.target.value })}
+              className="w-full px-3 py-2 rounded-lg bg-slate-900 border border-slate-800 text-white"
+            >
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+            </select>
           </div>
         </div>
+        <Button type="submit" variant="primary" fullWidth>
+          Save budget
+        </Button>
+        {feedback && (
+          <p className={`text-sm ${feedback.ok ? 'text-emerald-300' : 'text-red-400'}`}>{feedback.message}</p>
+        )}
+      </form>
+
+      <div className="space-y-3 max-h-64 overflow-y-auto pr-2">
+        {budgets.length === 0 && <p className="text-sm text-slate-400">No budgets yet.</p>}
+        {budgets.map((budget) => (
+          <div key={budget.id} className="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="font-semibold">{budget.categoryName}</p>
+                <p className="text-xs text-slate-400">{budget.period} limit</p>
+              </div>
+              <button className="text-xs text-slate-400" onClick={() => onRemoveBudget?.(budget.id)}>
+                Remove
+              </button>
+            </div>
+            <div className="flex items-center justify-between text-sm mt-3">
+              <span>{currencyFormatter.format(budget.spent)} spent</span>
+              <span>{currencyFormatter.format(budget.limit)} limit</span>
+            </div>
+            <div className="w-full bg-slate-800 rounded-full h-2 mt-2">
+              <div
+                className={`${budget.status === 'over' ? 'bg-red-400' : budget.status === 'warning' ? 'bg-amber-400' : 'bg-emerald-400'} h-2 rounded-full`}
+                style={{ width: `${Math.min(budget.percent, 100)}%` }}
+              ></div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -43,12 +43,12 @@ function IncomeEntry({ categories = [], onAdd, onDelete, entries = [] }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-6">Income Entry</h2>
+    <div className="w-full h-full">
+      <h2 className="text-2xl font-bold mb-6 text-white">Income Entry</h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
         {/* Income Form */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+  <div className="bg-white p-6 rounded-lg shadow-md min-h-[360px]">
           <h3 className="text-xl font-semibold mb-4">Add Income</h3>
           <form onSubmit={handleSubmit}>
             <InputField
@@ -111,7 +111,7 @@ function IncomeEntry({ categories = [], onAdd, onDelete, entries = [] }) {
         </div>
 
         {/* Income List */}
-        <div className="bg-white p-6 rounded-lg shadow-md">
+  <div className="bg-white p-6 rounded-lg shadow-md min-h-[360px]">
           <h3 className="text-xl font-semibold mb-4">Recent Income</h3>
           <div className="space-y-3">
             {(entries.length ? entries : localList).map((item) => (

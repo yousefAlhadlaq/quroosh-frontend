@@ -10,10 +10,9 @@ const navItems = [
 
 function AdminLayout({ title, description, children, accentLabel }) {
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 text-white flex font-['Inter',sans-serif]">
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-900/70 to-slate-900 text-white flex font-['Inter',sans-serif]">
       <aside className="hidden lg:flex flex-col w-64 bg-slate-900/80 border-r border-white/5 px-6 py-8 space-y-10 backdrop-blur">
         <div className="flex items-center space-x-3">
-          <div className="h-12 w-12 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 shadow-lg" />
           <div>
             <p className="text-sm text-gray-400">Guroosh</p>
             <p className="text-base font-semibold">Admin</p>
@@ -41,11 +40,11 @@ function AdminLayout({ title, description, children, accentLabel }) {
 
         <div className="text-xs text-gray-500">
           Need help?{' '}
-          <span className="text-white">support@quroosh.com</span>
+          <span className="text-white">v1.0 • © Guroosh 2025</span>
         </div>
       </aside>
 
-      <main className="flex-1 bg-gradient-to-br from-slate-900 via-teal-950 to-slate-900 px-6 md:px-10 py-10">
+      <main className="flex-1 bg-gradient-to-br from-slate-900 via-slate-900/70 to-slate-900 px-6 md:px-10 pt-24 pb-12">
         <div className="max-w-6xl mx-auto">
           <header className="flex flex-col gap-3 mb-10">
             {accentLabel && (

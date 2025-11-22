@@ -67,6 +67,15 @@ function FinancialAdvisorPage() {
     }
   ]);
 
+  const advisorPrimaryButtonClasses =
+    'px-4 py-2.5 text-sm font-semibold rounded-lg bg-gradient-to-r from-teal-500 to-emerald-400 text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-400/40 hover:from-teal-400 hover:to-emerald-300 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400';
+
+  const advisorGhostButtonClasses =
+    'px-4 py-2.5 text-sm font-semibold rounded-lg border border-slate-600/60 bg-slate-800/50 text-slate-100 hover:border-teal-400/60 hover:bg-slate-700/70 transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-slate-500';
+
+  const advisorDangerButtonClasses =
+    'px-4 py-2.5 text-sm font-semibold rounded-lg border border-red-500/50 bg-red-500/10 text-red-200 hover:bg-red-500/20 hover:border-red-400/70 shadow-[0_10px_25px_rgba(248,113,113,0.25)] transition-all duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400';
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'Pending':
@@ -420,21 +429,21 @@ function FinancialAdvisorPage() {
               </div>
 
               {selectedThread.status === 'Pending' && (
-                <div className="flex space-x-3 pt-2">
+                <div className="flex flex-wrap gap-3 pt-2">
                   <button
                     onClick={() => handleAcceptRequest(selectedThread.id)}
-                    className="px-6 py-2.5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold rounded-lg transition-all flex items-center space-x-2 shadow-lg hover:shadow-green-500/20"
+                    className={`${advisorPrimaryButtonClasses} flex items-center gap-2 shadow-teal-500/20`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Accept Request</span>
                   </button>
                   <button
                     onClick={() => handleDeclineRequest(selectedThread.id)}
-                    className="px-6 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 rounded-lg transition-all flex items-center space-x-2"
+                    className={`${advisorDangerButtonClasses} flex items-center gap-2`}
                   >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                     <span>Decline</span>
@@ -512,19 +521,19 @@ function FinancialAdvisorPage() {
                   <div className="flex flex-wrap gap-3">
                     <button
                       onClick={handleSendResponse}
-                      className="px-6 py-2.5 bg-gradient-to-r from-teal-600 to-teal-500 hover:from-teal-500 hover:to-teal-400 text-white font-semibold rounded-lg transition-all flex items-center space-x-2 shadow-lg hover:shadow-teal-500/20"
+                      className={`${advisorPrimaryButtonClasses} flex items-center gap-2`}
                     >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
                       <span>Send Response</span>
                     </button>
-                    <button className="px-4 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg transition-all border border-slate-600/50">
+                    <button className={`${advisorGhostButtonClasses} flex items-center gap-2`}>
                       Attach Files
                     </button>
                     <button
                       onClick={handleSaveDraft}
-                      className="px-4 py-2.5 bg-slate-700/50 hover:bg-slate-700 text-white rounded-lg transition-all border border-slate-600/50"
+                      className={`${advisorGhostButtonClasses} flex items-center gap-2`}
                     >
                       Save Draft
                     </button>
@@ -672,7 +681,7 @@ function FinancialAdvisorPage() {
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center space-x-3">
             <h2 className="text-3xl font-bold bg-gradient-to-r from-teal-300 via-blue-300 to-purple-300 bg-clip-text text-transparent">Client Requests</h2>
-            <span className="bg-gradient-to-r from-yellow-500 to-yellow-600 text-slate-900 text-sm font-bold px-4 py-1.5 rounded-full shadow-lg">
+            <span className="bg-gradient-to-r from-teal-500 to-emerald-400 text-white text-sm font-semibold px-4 py-1.5 rounded-full shadow-lg shadow-emerald-500/30">
               {pendingRequests.length}
             </span>
           </div>
@@ -782,24 +791,24 @@ function FinancialAdvisorPage() {
                       <>
                         <button
                           onClick={() => viewThread(request)}
-                          className="px-5 py-2.5 bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white font-semibold rounded-lg transition-all flex items-center justify-center space-x-2 shadow-lg hover:shadow-green-500/20"
+                          className={`${advisorPrimaryButtonClasses} w-full flex items-center justify-center gap-2`}
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
                           <span>Accept</span>
                         </button>
                         <button
                           onClick={() => viewThread(request)}
-                          className="px-5 py-2.5 bg-white border border-slate-200 text-slate-900 font-medium rounded-lg transition-all hover:border-teal-400 hover:bg-teal-50 dark:bg-slate-700/50 dark:border-slate-600/50 dark:text-white"
+                          className={`${advisorGhostButtonClasses} w-full`}
                         >
                           View Details
                         </button>
                         <button
                           onClick={() => handleDeclineRequest(request.id)}
-                          className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-medium rounded-lg transition-all flex items-center justify-center space-x-2"
+                          className={`${advisorDangerButtonClasses} w-full flex items-center justify-center gap-2`}
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                           </svg>
                           <span>Decline</span>
@@ -809,15 +818,15 @@ function FinancialAdvisorPage() {
                       <>
                         <button
                           onClick={() => viewThread(request)}
-                          className="px-5 py-2.5 bg-white border border-slate-200 text-slate-900 font-medium rounded-lg transition-all hover:border-teal-400 hover:bg-teal-50 dark:bg-slate-700/50 dark:border-slate-600/50 dark:text-white"
+                          className={`${advisorGhostButtonClasses} w-full`}
                         >
                           View Thread
                         </button>
                         <button
                           onClick={() => handleDeleteCompleted(request.id)}
-                          className="px-5 py-2.5 bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 font-medium rounded-lg transition-all flex items-center justify-center space-x-2"
+                          className={`${advisorDangerButtonClasses} w-full flex items-center justify-center gap-2`}
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                           </svg>
                           <span>Delete</span>
@@ -826,7 +835,7 @@ function FinancialAdvisorPage() {
                     ) : (
                       <button
                         onClick={() => viewThread(request)}
-                        className="px-5 py-2.5 bg-white border border-slate-200 text-slate-900 font-medium rounded-lg transition-all hover:border-teal-400 hover:bg-teal-50 dark:bg-slate-700/50 dark:border-slate-600/50 dark:text-white"
+                        className={`${advisorGhostButtonClasses} w-full`}
                       >
                         View Thread
                       </button>
@@ -841,9 +850,9 @@ function FinancialAdvisorPage() {
         {/* Floating Action Button */}
         <button
           onClick={() => setShowReplyModal(true)}
-          className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 hover:from-yellow-500 hover:to-yellow-700 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-50 group"
+          className="fixed bottom-8 right-8 w-16 h-16 bg-gradient-to-br from-teal-400 via-blue-500 to-purple-500 hover:from-teal-300 hover:to-blue-600 rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-50 group"
         >
-          <svg className="w-8 h-8 text-slate-900 group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
+          <svg className="w-8 h-8 text-white group-hover:rotate-90 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={3}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
           </svg>
         </button>

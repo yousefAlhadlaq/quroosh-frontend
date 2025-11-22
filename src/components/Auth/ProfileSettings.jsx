@@ -171,42 +171,42 @@ const ProfileSettings = () => {
   ];
 
   return (
-    <div className="flex min-h-screen bg-page text-slate-900 dark:text-slate-100">
+    <div className="min-h-screen bg-page text-slate-900 dark:text-slate-100">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Main Content */}
-      <div className="flex-1 p-8 pt-24">
-        <div className="max-w-6xl mx-auto">
+      <div className="ml-64 pt-20 px-4 md:px-6 pb-6 overflow-x-hidden min-h-screen">
+        <div className="max-w-5xl mx-auto">
           {/* Header */}
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Settings</h1>
+          <div className="mb-4">
+            <h1 className="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white mb-2">Settings</h1>
             <p className="text-slate-600 dark:text-gray-300 text-sm">Manage your preferences</p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
             {/* Left Column - Profile & Theme */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4">
               {/* Profile Card */}
-              <div className="bg-slate-800/95 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-xl">
-                <div className="space-y-4">
+              <div className="card p-4 md:p-6 shadow-xl">
+                <div className="space-y-3">
                   <div>
-                    <label className="block text-gray-400 text-xs mb-1">Name</label>
-                    <p className="text-white text-lg font-medium">
+                    <label className="block text-slate-400 dark:text-gray-400 text-xs mb-1">Name</label>
+                    <p className="text-slate-900 dark:text-white text-lg font-medium">
                       {user?.fullName || 'Jordan Carter'}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-gray-400 text-xs mb-1">Email</label>
-                    <p className="text-white">
+                    <label className="block text-slate-400 dark:text-gray-400 text-xs mb-1">Email</label>
+                    <p className="text-slate-900 dark:text-white">
                       {user?.email || 'jordan.carter@example.com'}
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-gray-400 text-xs mb-1">Phone</label>
-                    <p className="text-white">
+                    <label className="block text-slate-400 dark:text-gray-400 text-xs mb-1">Phone</label>
+                    <p className="text-slate-900 dark:text-white">
                       {user?.phoneNumber || '+1 555 246 8100'}
                     </p>
                   </div>
@@ -223,22 +223,22 @@ const ProfileSettings = () => {
               </div>
 
               {/* Theme Selector */}
-              <div className="bg-slate-800/95 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-xl">
-                <h3 className="text-white font-medium mb-4">Theme</h3>
+              <div className="card p-4 md:p-6 shadow-xl">
+                <h3 className="text-slate-900 dark:text-white font-medium mb-4">Theme</h3>
                 <ThemeToggleSegmented />
               </div>
 
               {/* Currency & Language */}
-              <div className="bg-slate-800/95 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-xl">
+              <div className="card p-4 md:p-6 shadow-xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                    <label className="label">
                       Currency
                     </label>
                     <select
                       value={settings.currency}
                       onChange={(e) => setSettings(prev => ({ ...prev, currency: e.target.value }))}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="select"
                     >
                       {currencyOptions.map(option => (
                         <option key={option.value} value={option.value}>
@@ -246,19 +246,19 @@ const ProfileSettings = () => {
                         </option>
                       ))}
                     </select>
-                    <p className="text-xs text-gray-400 mt-2">
-                      Example: <span className="text-white">$1,234.56</span>
+                    <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">
+                      Example: <span className="text-slate-900 dark:text-white">$1,234.56</span>
                     </p>
                   </div>
 
                   <div>
-                    <label className="block text-gray-300 text-sm font-medium mb-2">
+                    <label className="label">
                       Language
                     </label>
                     <select
                       value={settings.language}
                       onChange={(e) => setSettings(prev => ({ ...prev, language: e.target.value }))}
-                      className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      className="select"
                     >
                       {languageOptions.map(option => (
                         <option key={option.value} value={option.value}>
@@ -266,7 +266,7 @@ const ProfileSettings = () => {
                         </option>
                       ))}
                     </select>
-                    <p className="text-xs text-gray-400 mt-2">
+                    <p className="text-xs text-slate-500 dark:text-gray-400 mt-2">
                       Content language used across the app.
                     </p>
                   </div>
@@ -275,46 +275,46 @@ const ProfileSettings = () => {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Quick Links */}
-              <div className="bg-slate-800/95 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-xl space-y-3">
+              <div className="card p-4 md:p-6 shadow-xl space-y-3">
                 <button
                   onClick={() => navigate('/help')}
-                  className="w-full py-3 px-4 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-white text-left transition-all"
+                  className="w-full py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700/50 dark:hover:bg-slate-700 rounded-lg text-slate-900 dark:text-white text-left transition-all"
                 >
                   Help Center
                 </button>
                 <button
                   onClick={() => navigate('/support')}
-                  className="w-full py-3 px-4 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-white text-left transition-all"
+                  className="w-full py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700/50 dark:hover:bg-slate-700 rounded-lg text-slate-900 dark:text-white text-left transition-all"
                 >
                   Contact Support
                 </button>
                 <button
                   onClick={() => navigate('/privacy')}
-                  className="w-full py-3 px-4 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-white text-left transition-all"
+                  className="w-full py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700/50 dark:hover:bg-slate-700 rounded-lg text-slate-900 dark:text-white text-left transition-all"
                 >
                   Privacy Policy
                 </button>
                 <button
                   onClick={() => navigate('/terms')}
-                  className="w-full py-3 px-4 bg-slate-700/50 hover:bg-slate-700 rounded-lg text-white text-left transition-all"
+                  className="w-full py-3 px-4 bg-slate-200 hover:bg-slate-300 dark:bg-slate-700/50 dark:hover:bg-slate-700 rounded-lg text-slate-900 dark:text-white text-left transition-all"
                 >
                   Terms of Service
                 </button>
               </div>
 
               {/* Notifications */}
-              <div className="bg-slate-800/95 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-xl">
-                <h3 className="text-white font-medium mb-4">Transaction alerts</h3>
+              <div className="card p-4 md:p-6 shadow-xl">
+                <h3 className="text-slate-900 dark:text-white font-medium mb-4">Transaction alerts</h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-300 text-sm">Transaction alerts</span>
+                    <span className="text-slate-600 dark:text-gray-300 text-sm">Transaction alerts</span>
                     <button
                       onClick={() => handleNotificationToggle('transactionAlerts')}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.notifications.transactionAlerts ? 'bg-teal-500' : 'bg-gray-600'
+                        settings.notifications.transactionAlerts ? 'bg-teal-500' : 'bg-slate-400 dark:bg-gray-600'
                       }`}
                     >
                       <span
@@ -326,11 +326,11 @@ const ProfileSettings = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-300 text-sm">Budget reminders</span>
+                    <span className="text-slate-600 dark:text-gray-300 text-sm">Budget reminders</span>
                     <button
                       onClick={() => handleNotificationToggle('budgetReminders')}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.notifications.budgetReminders ? 'bg-teal-500' : 'bg-gray-600'
+                        settings.notifications.budgetReminders ? 'bg-teal-500' : 'bg-slate-400 dark:bg-gray-600'
                       }`}
                     >
                       <span
@@ -342,11 +342,11 @@ const ProfileSettings = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-300 text-sm">Investment updates</span>
+                    <span className="text-slate-600 dark:text-gray-300 text-sm">Investment updates</span>
                     <button
                       onClick={() => handleNotificationToggle('investmentUpdates')}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.notifications.investmentUpdates ? 'bg-teal-500' : 'bg-gray-600'
+                        settings.notifications.investmentUpdates ? 'bg-teal-500' : 'bg-slate-400 dark:bg-gray-600'
                       }`}
                     >
                       <span
@@ -358,11 +358,11 @@ const ProfileSettings = () => {
                   </div>
 
                   <div className="flex items-center justify-between">
-                    <span className="text-gray-300 text-sm">Marketing emails</span>
+                    <span className="text-slate-600 dark:text-gray-300 text-sm">Marketing emails</span>
                     <button
                       onClick={() => handleNotificationToggle('marketingEmails')}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        settings.notifications.marketingEmails ? 'bg-teal-500' : 'bg-gray-600'
+                        settings.notifications.marketingEmails ? 'bg-teal-500' : 'bg-slate-400 dark:bg-gray-600'
                       }`}
                     >
                       <span
@@ -374,13 +374,13 @@ const ProfileSettings = () => {
                   </div>
                 </div>
 
-                <p className="text-xs text-gray-400 mt-4">
+                <p className="text-xs text-slate-500 dark:text-gray-400 mt-4">
                   Tip: Disable all to silence notifications.
                 </p>
               </div>
 
               {/* Logout Button */}
-              <div className="bg-slate-800/95 backdrop-blur-sm rounded-xl p-6 border border-slate-700/50 shadow-xl">
+              <div className="card p-4 md:p-6 shadow-xl">
                 <Button
                   variant="danger"
                   fullWidth
@@ -394,8 +394,8 @@ const ProfileSettings = () => {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-gray-400 text-xs">v1.0.4 © Guroosh</p>
+          <div className="mt-6 mb-4 text-center">
+            <p className="text-slate-500 dark:text-gray-400 text-xs">v1.0.4 © Guroosh</p>
           </div>
         </div>
       </div>

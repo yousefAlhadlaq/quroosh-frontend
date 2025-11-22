@@ -253,7 +253,7 @@ const EmailVerification = () => {
                   variant="primary"
                   fullWidth
                   disabled={loading || code.some(d => !d)}
-                  className="!bg-gradient-to-r !from-yellow-500 !to-yellow-600 hover:!from-yellow-600 hover:!to-yellow-700 !text-slate-900 font-bold !shadow-lg hover:!shadow-yellow-500/20"
+                  className="font-semibold"
                 >
                   <span className="flex items-center justify-center gap-2">
                     {loading ? (
